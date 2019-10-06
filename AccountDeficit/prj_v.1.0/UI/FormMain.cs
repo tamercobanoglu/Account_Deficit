@@ -152,7 +152,7 @@ namespace prj_v._1._0.UI
                     if (user.userPassword == tbOldPassWord.Text) {
                         if (tbPassWord.Text == tbPassWord1.Text) {
                             user.userPassword = tbPassWord.Text;
-                            r = Helper.SignCRUD(user, EntityState.Modified);
+                            r = Helper.CRUD(null, null, null, null, user, EntityState.Modified, "signin");
 
                             tbOldPassWord.Clear();
                             tbPassWord.Clear(); tbPassWord1.Clear();
@@ -184,7 +184,7 @@ namespace prj_v._1._0.UI
                             addDate = DateTime.Now.Date
                         };
 
-                        r = Helper.CusCRUD(cus, EntityState.Added);
+                        r = Helper.CRUD(cus, null, null, null, null, EntityState.Added, "customer");
                         if (r.isSuccess) {
                             tbName.Clear(); tbSname.Clear();
                             mtbPhone.Clear(); tbAddress.Clear();
@@ -242,7 +242,7 @@ namespace prj_v._1._0.UI
                 if (mtbPhone1.Text.Length == 14) { cus.phone = mtbPhone1.Text; c++; }
                 if (!Helper.I(tbAddress1.Text)) { cus.addressLine = tbAddress1.Text; c++; }
 
-                r = Helper.CusCRUD(cus, EntityState.Modified);
+                r = Helper.CRUD(cus, null, null, null, null, EntityState.Modified, "customer");
                 if (r.isSuccess) {
                     tbName1.Clear(); tbSname1.Clear();
                     mtbPhone1.Clear(); tbAddress1.Clear();
@@ -272,8 +272,7 @@ namespace prj_v._1._0.UI
                 var result = MessageBox.Show("Bu işlem geri alınamaz. Yine de silinsin mi?", "SİL?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
                 if(result == DialogResult.Yes) {
-                    r = Helper.CusCRUD(cus, EntityState.Deleted);
-
+                    r = Helper.CRUD(cus, null, null, null, null, EntityState.Deleted, "customer");
                     if (r.isSuccess) {
                         DisplayCustomers();
                         cbCustomers.DataSource = HelperCustomer.GetCustomerList();
@@ -307,7 +306,7 @@ namespace prj_v._1._0.UI
                         addDate = DateTime.Now.Date
                     };
 
-                    r = Helper.CateCRUD(ct, EntityState.Added);
+                    r = Helper.CRUD(null, ct, null, null, null, EntityState.Added, "category");
                     if (r.isSuccess) {
                         tbCateName.Clear(); tbExp.Clear();
 
@@ -347,7 +346,7 @@ namespace prj_v._1._0.UI
                 if (!Helper.I(tbCateName1.Text)) { ct.cateName = tbCateName1.Text; c++; }
                 if (!Helper.I(tbExp1.Text)) { ct.explanation = tbExp1.Text; c++; }
 
-                r = Helper.CateCRUD(ct, EntityState.Modified);
+                r = Helper.CRUD(null, ct, null, null, null, EntityState.Modified, "category");
                 if (r.isSuccess) {
                     tbCateName1.Clear(); tbExp1.Clear();
 
@@ -372,8 +371,7 @@ namespace prj_v._1._0.UI
                 var result = MessageBox.Show("Bu işlem geri alınamaz. Yine de silinsin mi?", "SİL?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
                 if (result == DialogResult.Yes) {
-                    r = Helper.CateCRUD(ct, EntityState.Deleted);
-
+                    r = Helper.CRUD(null, ct, null, null, null, EntityState.Deleted, "category");
                     if (r.isSuccess) {
                         DisplayCategories();
                         DisplayProducts();
@@ -405,8 +403,8 @@ namespace prj_v._1._0.UI
 						cateID = Convert.ToInt32(cbCategory.SelectedValue)
 					};
 
-					r = Helper.ProCRUD(pro, EntityState.Added);
-					if (r.isSuccess) {
+                    r = Helper.CRUD(null, null, pro, null, null, EntityState.Added, "product");
+                    if (r.isSuccess) {
 						tbProName.Clear(); cbCategory.SelectedIndex = 0;
 						tbPrePrice.Clear(); tbSalePrice.Clear(); tbStock.Clear();
 						DisplayProducts();
@@ -456,8 +454,8 @@ namespace prj_v._1._0.UI
                 pro.cateID = Convert.ToInt32(cbCategory1.SelectedValue);
                 if (previousCateID != pro.cateID) c++;
 
-                r = Helper.ProCRUD(pro, EntityState.Modified);
-				if (r.isSuccess) {
+                r = Helper.CRUD(null, null, pro, null, null, EntityState.Modified, "product");
+                if (r.isSuccess) {
 					tbProName1.Clear(); cbCategory1.SelectedIndex = 0;
 					tbPrePrice1.Clear(); tbSalePrice1.Clear(); tbStock1.Clear();
 					DisplayProducts();
@@ -485,9 +483,9 @@ namespace prj_v._1._0.UI
 				var result = MessageBox.Show("Bu işlem geri alınamaz. Yine de silinsin mi?", "SİL?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
 				if (result == DialogResult.Yes) {
-					r = Helper.ProCRUD(pro, EntityState.Deleted);
+                    r = Helper.CRUD(null, null, pro, null, null, EntityState.Deleted, "product");
 
-					if (r.isSuccess) {
+                    if (r.isSuccess) {
 						DisplayProducts();
                         DisplayOrders();
                         lblWarningPro.Visible = true;
@@ -615,10 +613,10 @@ namespace prj_v._1._0.UI
                             customerID = custID
                         };
 
-                        r = Helper.OrdCRUD(ord, EntityState.Added);
+                        r = Helper.CRUD(null, null, null, ord, null, EntityState.Added, "order");
                         if (r.isSuccess) {
                             pro.quantity -= Convert.ToInt32(tbQuantity.Text);
-                            rr = Helper.ProCRUD(pro, EntityState.Modified);
+                            rr = Helper.CRUD(null, null, pro, null, null, EntityState.Modified, "product");
                         }
 
                         tbQuantity.Clear();
@@ -632,28 +630,24 @@ namespace prj_v._1._0.UI
         private void RbCustomers_CheckedChanged(object sender, EventArgs e)
         {
             section = "customer";
-            if (tbSearch.Text == null) DisplayOrders();
-            else DisplayOrders(section, tbSearch.Text, firsDate, lastDate);
+            DispOrd("rb");
         }
 
         private void RbProName_CheckedChanged(object sender, EventArgs e)
         {
             section = "product";
-            if (tbSearch.Text == null) DisplayOrders();
-            else DisplayOrders(section, tbSearch.Text, firsDate, lastDate);
+            DispOrd("rb");
         }
 
         private void RbCategory_CheckedChanged(object sender, EventArgs e)
         {
             section = "category";
-            if (tbSearch.Text == null) DisplayOrders();
-            else DisplayOrders(section, tbSearch.Text, firsDate, lastDate);
+            DispOrd("rb");
         }
 
         private void TbSearch_TextChanged(object sender, EventArgs e)
         {
-            if (tbSearch.Text == null) DisplayOrders();
-            else DisplayOrders(section, tbSearch.Text, firsDate, lastDate);
+            DispOrd("rb");
         }
 
         private void DtpFirstDate_ValueChanged(object sender, EventArgs e)
@@ -661,16 +655,26 @@ namespace prj_v._1._0.UI
             dtpLastDate.MinDate = dtpFirstDate.Value;
             firsDate = Convert.ToDateTime(dtpFirstDate.Value);
 
-            if (tbSearch.Text == null) DisplayOrders(firsDate, lastDate);
-            else DisplayOrders(section, tbSearch.Text, firsDate, lastDate);
+            DispOrd("dtp");
         }
 
         private void DtpLastDate_ValueChanged(object sender, EventArgs e)
         {
             lastDate = Convert.ToDateTime(dtpLastDate.Value);
 
-            if (tbSearch.Text == null) DisplayOrders(firsDate, lastDate);
-            else DisplayOrders(section, tbSearch.Text, firsDate, lastDate);
+            DispOrd("dtp");
+        }
+
+        void DispOrd(string type) {
+            if (type == "rb") {
+                if (tbSearch.Text == null) DisplayOrders();
+                else DisplayOrders(section, tbSearch.Text, firsDate, lastDate);
+            }
+
+            else if (type == "dtp") {
+                if (tbSearch.Text == null) DisplayOrders(firsDate, lastDate);
+                else DisplayOrders(section, tbSearch.Text, firsDate, lastDate);
+            }
         }
     }
 }

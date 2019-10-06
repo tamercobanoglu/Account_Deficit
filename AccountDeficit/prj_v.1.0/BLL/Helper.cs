@@ -24,62 +24,17 @@ namespace prj_v._1._0.BLL
             return true;
         }
 
-        public static ResultSet CusCRUD(Customers cus, EntityState state) {
+        public static ResultSet CRUD(Customers cus, Cate cate, Products pro, Orders ord, Signin sign, EntityState state, string table) {
             ResultSet r = new ResultSet();
             try {
-                r = HelperCustomer.CRUD(cus, state);
-                if (r.Message != null) MessageBox.Show(r.Message, "UYARI", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
-                return r;
-            }
-            catch (Exception e) {
-                r.Message = e.Message;
-            }
-            return r;
-        }
-
-        public static ResultSet CateCRUD(Cate cate, EntityState state) {
-            ResultSet r = new ResultSet();
-            try {
-                r = HelperCate.CRUD(cate, state);
-                if (r.Message != null) MessageBox.Show(r.Message, "UYARI", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
-                return r;
-            }
-            catch (Exception e) {
-                r.Message = e.Message;
-            }
-            return r;
-        }
-
-        public static ResultSet ProCRUD(Products pro, EntityState state) {
-            ResultSet r = new ResultSet();
-            try {
-                r = HelperProduct.CRUD(pro, state);
-                if (r.Message != null) MessageBox.Show(r.Message, "UYARI", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
-                return r;
-            }
-            catch (Exception e) {
-                r.Message = e.Message;
-            }
-            return r;
-        }
-
-        public static ResultSet OrdCRUD(Orders ord, EntityState state) {
-            ResultSet r = new ResultSet();
-            try {
-                r = HelperOrder.CRUD(ord, state);
-                if (r.Message != null) MessageBox.Show(r.Message, "UYARI", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
-                return r;
-            }
-            catch (Exception e) {
-                r.Message = e.Message;
-            }
-            return r;
-        }
-
-        public static ResultSet SignCRUD(Signin sign, EntityState state) {
-            ResultSet r = new ResultSet();
-            try {
-                r = HelperSignin.CRUD(sign, state);
+                switch (table) {
+                    case "customer": r = HelperCustomer.CRUD(cus, state); break;
+                    case "category": r = HelperCate.CRUD(cate, state); break;
+                    case "product": r = HelperProduct.CRUD(pro, state); break;
+                    case "order": r = HelperOrder.CRUD(ord, state); break;
+                    case "signin": r = HelperSignin.CRUD(sign, state); break;
+                    default: break;
+                }
                 if (r.Message != null) MessageBox.Show(r.Message, "UYARI", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
                 return r;
             }
